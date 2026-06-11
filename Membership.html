@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Membership — The New York State Society of the Cincinnati</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..600&amp;family=Public+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="membership" data-screen-label="Membership">
+
+<div id="site-header"></div>
+
+<main>
+
+  <section class="pagehead">
+    <div class="container">
+      <p class="breadcrumb"><a href="Home.html">Home</a><span class="sep">/</span>Membership</p>
+      <h1>Membership in the Society</h1>
+      <p class="lede">Membership is based on descent from a New York officer of the Continental Army, Navy, or Marine Corps who served at least three years, was an Original Member of the Society, or died in service.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container" style="display: grid; grid-template-columns: 1fr 420px; gap: 72px; align-items: start;">
+
+      <div>
+        <p class="kicker">The Path to Election</p>
+        <h2 style="max-width: 16em;">A series of steps toward admission.</h2>
+        <p style="color: var(--muted); max-width: 62ch; margin: 18px 0 36px;">The final decision for admission rests with the membership of the Society, but a series of intermediate actions should be followed prior to election at one of its formal meetings. Only one person may represent an officer as a full hereditary member at any one time; where the most direct and senior line cannot be identified, a collateral line is acceptable.</p>
+
+        <ol class="steps">
+          <li class="step">
+            <div>
+              <h3>Determine your eligibility</h3>
+              <p>Review your genealogy and the service record of your ancestors. Membership rests on descent from a qualifying New York officer of the Revolution.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div>
+              <h3>Contact the Secretary</h3>
+              <p>If you believe yourself eligible, write to the Secretary of the Society for advice and assistance at <a href="mailto:Info@nycincinnati.org">Info@nycincinnati.org</a>.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div>
+              <h3>Claims &amp; Admissions review</h3>
+              <p>If your line looks promising, the Secretary will direct your inquiry to the Claims and Admissions Committee for further evaluation.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div>
+              <h3>Attend a meeting</h3>
+              <p>Prior to any formal application, you will be invited to attend one of the regular meetings of the Society — the better to get to know the members, and the members, you.</p>
+            </div>
+          </li>
+          <li class="step">
+            <div>
+              <h3>Authenticate your lineage</h3>
+              <p>Applicants should be prepared to document their descent with the standard genealogical proofs before election at a formal meeting.</p>
+            </div>
+          </li>
+        </ol>
+
+        <p style="color: var(--muted); max-width: 62ch; margin-top: 28px;">Beyond eligibility, a key element of membership is a genuine commitment to the original goals of the Cincinnati: honoring those who sacrificed so much to bring us independence — particularly George Washington — and keeping alive a clear picture of the history of the American Revolution.</p>
+      </div>
+
+      <div style="display: grid; gap: 32px;">
+
+        <!-- Eligibility checker -->
+        <div class="checker" id="checker">
+          <p class="checker-progress" id="checker-progress">Eligibility Guide · Question 1 of 3</p>
+          <div id="checker-body">
+            <p class="q" id="checker-q"></p>
+            <p class="q-help" id="checker-help"></p>
+            <div class="checker-actions">
+              <button class="btn btn-primary" id="checker-yes" type="button">Yes</button>
+              <button class="btn btn-ghost" id="checker-no" type="button">No / Not sure</button>
+            </div>
+          </div>
+          <div id="checker-result" style="display: none;">
+            <p class="result-title" id="result-title"></p>
+            <p class="result-body" id="result-body"></p>
+            <div style="display: flex; align-items: center; gap: 22px;">
+              <a class="btn btn-primary" href="mailto:Info@nycincinnati.org" id="result-cta">Write to the Secretary</a>
+              <button class="restart" id="checker-restart" type="button">Start over</button>
+            </div>
+          </div>
+        </div>
+
+        <figure class="fig">
+          <div class="frame">
+            <img src="https://www.nycincinnati.org/images/membership_book.jpg" alt="A new member signs the membership book at Anderson House">
+          </div>
+          <figcaption>John Delafield Jr. signs the membership book at Anderson House.</figcaption>
+        </figure>
+
+        <p class="note">Some officers of the New York Line are not currently represented in the Society. A list of these officers is maintained for prospective applicants researching their descent.</p>
+
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<div id="site-footer"></div>
+
+<script src="site.js"></script>
+<script>
+(function () {
+  var QUESTIONS = [
+    {
+      q: "Do you descend from an officer who served in a New York unit of the Continental Army, Navy, or Marine Corps?",
+      help: "Militia service alone does not qualify; the officer must have held a Continental commission credited to New York."
+    },
+    {
+      q: "Did that officer serve at least three years, die in service, or join the Society as an Original Member in 1783?",
+      help: "Any one of the three conditions satisfies the requirement."
+    },
+    {
+      q: "As far as you know, is that officer currently unrepresented in the Society?",
+      help: "Only one person may represent each officer at a time — though vacancies occur, and collateral lines are acceptable. If unsure, answer No."
+    }
+  ];
+
+  var idx = 0;
+  var allYes = true;
+  var anyNotSure = false;
+
+  var progress = document.getElementById("checker-progress");
+  var body = document.getElementById("checker-body");
+  var result = document.getElementById("checker-result");
+  var qEl = document.getElementById("checker-q");
+  var helpEl = document.getElementById("checker-help");
+
+  function renderQuestion() {
+    progress.textContent = "Eligibility Guide · Question " + (idx + 1) + " of " + QUESTIONS.length;
+    qEl.textContent = QUESTIONS[idx].q;
+    helpEl.textContent = QUESTIONS[idx].help;
+  }
+
+  function finish() {
+    body.style.display = "none";
+    result.style.display = "block";
+    var title = document.getElementById("result-title");
+    var text = document.getElementById("result-body");
+    if (allYes) {
+      progress.textContent = "Eligibility Guide · Result";
+      title.textContent = "Your line looks promising.";
+      text.textContent = "You appear to meet the basic requirements for hereditary membership. The next step is to write to the Secretary, who will advise you and, if appropriate, refer your line to the Claims and Admissions Committee.";
+    } else if (anyNotSure) {
+      progress.textContent = "Eligibility Guide · Result";
+      title.textContent = "Worth a conversation.";
+      text.textContent = "Uncertainty about service records or representation is common — the Secretary and the Claims and Admissions Committee regularly help applicants research these questions. We welcome your inquiry.";
+    }
+  }
+
+  document.getElementById("checker-yes").addEventListener("click", function () {
+    idx += 1;
+    if (idx >= QUESTIONS.length) { finish(); } else { renderQuestion(); }
+  });
+  document.getElementById("checker-no").addEventListener("click", function () {
+    allYes = false;
+    anyNotSure = true;
+    idx += 1;
+    if (idx >= QUESTIONS.length) { finish(); } else { renderQuestion(); }
+  });
+  document.getElementById("checker-restart").addEventListener("click", function () {
+    idx = 0; allYes = true; anyNotSure = false;
+    result.style.display = "none";
+    body.style.display = "block";
+    renderQuestion();
+  });
+
+  renderQuestion();
+})();
+</script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="tweaks.jsx"></script>
+
+</body>
+</html>
